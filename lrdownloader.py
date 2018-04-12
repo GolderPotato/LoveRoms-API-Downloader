@@ -1,5 +1,6 @@
 import urllib2;
 import os;
+import time;
 
 hdr = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -15,6 +16,8 @@ namelist = [];
 consolelist = [];
 idlist = [];
 
+print("Starting LOVEROMS downloader...");
+
 def main(page, rom):
     global namelist;
     global consolelist;
@@ -29,7 +32,7 @@ def main(page, rom):
     find_roms(rom, page);
     for k in range(len(namelist)):
         print(str(k)+") "+namelist[k]+" CONSOLE: "+consolelist[k]);
-    print("Do you wish to seach on another page? (y/n)")
+    print("Do you wish to search on another page? (y/n)")
     yn = "";
     while(True):
         yn = raw_input("> ");
@@ -37,7 +40,7 @@ def main(page, rom):
             yn = yn.lower();
             break;
     if(yn == "y"):
-        print("Please enter page #")
+        print("Please enter page #");
         page = 0;
         while True:
             page = raw_input("> ");
@@ -56,7 +59,7 @@ def main(page, rom):
     while(True):
         want = raw_input("> ");
         if(want == "q"):
-            main("", 0);
+            main(0, "");
             return;
         try:
             namelist[int(want)];
@@ -72,10 +75,9 @@ def main(page, rom):
     url =  "https://download.loveroms.com/downloader/rom/"+idlist[id]+"/1/"+namelist[id].replace(" ", "%20")+".zip";
     print("Downloading and extracting "+url+"...");
     os.system('cd '+directory+' && wget "'+url+'" && unzip "'+name+'.zip" && rm "'+name+'.zip"');
-    print("Operation success! Do you wish to reboot now? (sudo mode only)");
-    yesno = raw_input("> ");
-    if(yesno.lower() == "y"):
-        os.system("reboot");
+    os.system("killall emulationstation && emulationstation");
+    print("Done ! Restarting emulationstation...");
+    time.sleep(3);
     exit(0);
 
 def find_roms(name, page):
@@ -97,7 +99,8 @@ def find_roms(name, page):
                     idlist.append(rom_id);
 
 def fetch_roms(search, page):
-    url = "https://www.loveroms.com/roms/?q="+search+"&page="+str(page);
+    url = "https://www.loveroms.com/roms/?q="+search+"+&page="+str(page);
+    #if you are wondering why I added the "+" before "&page" its because of a website bug, not me
     req = urllib2.Request(url, headers=hdr)
     try:
         page = urllib2.urlopen(req);
