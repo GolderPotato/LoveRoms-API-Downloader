@@ -1,2 +1,2 @@
-# LoveRoms-RetroPie-downloader
-This is a python script used to easly download retro games on retropie using LoveRoms.com api (sort of)
+# LoveRoms-API-downloader
+This is a python script used to easly download retro games on retropie (might work on emulationstation if you edit paths) using LoveRoms.com api using http 
